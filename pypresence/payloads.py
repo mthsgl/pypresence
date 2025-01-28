@@ -291,6 +291,17 @@ class Payload:
         return cls(payload)
 
     @classmethod
+    def get_soundboard_sounds(cls):
+        payload = {
+            "cmd": "GET_SOUNDBOARD_SOUNDS",
+            "args": {
+            },
+            "nonce": '{:.20f}'.format(cls.time())
+        }
+
+        return cls(payload)
+
+    @classmethod
     def send_activity_join_invite(cls, user_id: str):
         payload = {
             "cmd": "SEND_ACTIVITY_JOIN_INVITE",

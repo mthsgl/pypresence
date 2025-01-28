@@ -4,6 +4,7 @@ import struct
 import json
 import os
 from typing import List
+import time
 
 from .baseclient import BaseClient
 from .exceptions import *
@@ -107,7 +108,17 @@ class Client(BaseClient):
         return self.loop.run_until_complete(self.read_output())
 
     def select_voice_channel(self, channel_id: str):
-        payload = Payload.select_voice_channel(channel_id)
+        payload = None
+        if (channel_id is None):
+            payload = {
+                "cmd": "SELECT_VOICE_CHANNEL",
+                "args": {
+                    "channel_id": None,
+                },
+                "nonce": '{:.20f}'.format(time.time())
+            }
+        else: 
+            payload = Payload.select_voice_channel(channel_id)
         self.send_data(1, payload)
         return self.loop.run_until_complete(self.read_output())
 
@@ -176,6 +187,11 @@ class Client(BaseClient):
 
     def capture_shortcut(self, action: str):
         payload = Payload.capture_shortcut(action)
+        self.send_data(1, payload)
+        return self.loop.run_until_complete(self.read_output())
+        
+    def get_soundboard_sounds(self):
+        payload = Payload.get_soundboard_sounds()
         self.send_data(1, payload)
         return self.loop.run_until_complete(self.read_output())
 
